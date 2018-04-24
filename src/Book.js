@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-
 class Book extends Component {
+  static PropTypes = {
+    book: PropTypes.object.isRequired
+  }
+
+  // TODO: filter when theres no author / no cover image
+
   render() {
     const { book } = this.props
     const thumb = book.imageLinks.smallThumbnail
@@ -26,7 +31,12 @@ class Book extends Component {
             </div>
           </div>
           <div className="book-title">{ book.title }</div>
-          <div className="book-authors">{ book.authors[0] }</div>
+          {
+            book.authors &&
+              book.authors.map((author, index) => (
+                <div className="book-authors" key={ index }>{author}</div>
+              ))
+          }
         </div>
       </li>
     )

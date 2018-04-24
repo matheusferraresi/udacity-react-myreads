@@ -1,27 +1,67 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import * as BooksAPI from './BooksAPI';
+import Book from './Book';
 
 class SearchBooks extends Component {
+
+  state = {
+    query: '',
+    searchResults: [],
+    searchError: false
+  }
+
+  searchBooks = (e) => {
+    const query = e.target.value
+    this.setState({ query: query })
+    
+    if (query) {
+      BooksAPI.search(query)
+        .then((books) => (
+          books.length > 0
+          ? this.setState({ searchResults: books, searchError: false })
+          : this.setState({ searchResults: [], searchError: true})
+        ));
+    } else {
+      this.setState({searchResults: [], searchError: false})
+    }
+  }
+
   render() {
+    const { query, searchResults, searchError } = this.state
+
     return(
       <div className="search-books">
         <div className="search-books-bar">
           <Link to="/" className="close-search">Close</Link>
           <div className="search-books-input-wrapper">
-            {/*
-              NOTES: The search from BooksAPI is limited to a particular set of search terms.
-              You can find these search terms here:
-              https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
-
-              However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-              you don't find a specific author or title. Every search is limited by search terms.
-            */}
-            <input type="text" placeholder="Search by title or author"/>
-
+            <input
+              type="text"
+              placeholder="Search by title or author"
+              value={ query }
+              onChange={ this.searchBooks }
+            />
           </div>
         </div>
         <div className="search-books-results">
-          <ol className="books-grid"></ol>
+            {searchResults.length > 0 && (
+              <div>
+                <h3>Search returned { searchResults.length } books</h3>
+                <ol className="books-grid">
+                {searchResults.map((book) => (
+                  <Book
+                    book={ book }
+                    key={ book.id }
+                  />
+                ))}
+                </ol>
+              </div>
+            )}
+          {searchError && 
+            <div>
+              <h3>Search returned 0 books. Please try a different keyword. </h3>
+            </div>
+          }
         </div>
       </div>
     )
