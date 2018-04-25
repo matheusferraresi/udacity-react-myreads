@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import * as BooksAPI from './BooksAPI'
+import * as BooksAPI from './BooksAPI';
+import ShelfChanger from './ShelfChanger';
+import SearchBooks from './SearchBooks';
 
 class Book extends Component {
   static PropTypes = {
-    book: PropTypes.object.isRequired
+    book: PropTypes.object.isRequired,
+    books: PropTypes.array.isRequired,
+    shelfChanger: PropTypes.func.isRequired
   }
 
   state = {
@@ -16,15 +20,6 @@ class Book extends Component {
   render() {
     const { book, books, shelfChanger } = this.props
     const thumb = book.imageLinks.smallThumbnail
-    
-    let currentShelf = 'none';
-
-    for(let item of books) {
-      if (item.id === book.id) {
-        currentShelf = item.shelf
-        break;
-      } 
-    }
 
     return(
       <li>
@@ -34,17 +29,11 @@ class Book extends Component {
               className="book-cover"
               style={{ backgroundImage: `url(${thumb})` }}>
             </div>
-            <div className="book-shelf-changer">
-              <select 
-                defaultValue={currentShelf}
-                onChange={(e) => shelfChanger(e.target.value, book) }>
-                <option value="none" disabled>Move to...</option>
-                <option value="currentlyReading">Currently Reading</option>
-                <option value="wantToRead">Want to Read</option>
-                <option value="read">Read</option>
-                <option value="none">None</option>
-              </select>
-            </div>
+            <ShelfChanger
+              book={ book }
+              books={ books }
+              shelfChanger={ shelfChanger }
+            />
           </div>
           <div className="book-title">{ book.title }</div>
           {
