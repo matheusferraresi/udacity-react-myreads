@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import * as BooksAPI from './BooksAPI';
 import ShelfChanger from './ShelfChanger';
-import SearchBooks from './SearchBooks';
+import noCover from './icons/no-cover-image.png';
 
 class Book extends Component {
   static PropTypes = {
@@ -19,7 +18,8 @@ class Book extends Component {
 
   render() {
     const { book, books, shelfChanger } = this.props
-    const thumb = book.imageLinks.smallThumbnail
+    
+    const thumb = book.imageLinks ? book.imageLinks.smallThumbnail : noCover;
 
     return(
       <li>
@@ -36,12 +36,13 @@ class Book extends Component {
             />
           </div>
           <div className="book-title">{ book.title }</div>
-          {
-            book.authors &&
-              book.authors.map((author, index) => (
-                <div className="book-authors" key={ index }>{author}</div>
-              ))
-          }
+          {book.authors ? (
+            book.authors.map((author, index) => (
+              <div className="book-authors" key={ index }>{author}</div>
+            ))
+          ) : (
+            <div className="book-authors">No author available</div>
+          )}
         </div>
       </li>
     )
