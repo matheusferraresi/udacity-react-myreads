@@ -28,6 +28,7 @@ class SearchBooks extends Component {
   }
 
   render() {
+    const { books, shelfChanger } = this.props
     const { query, searchResults, searchError } = this.state
 
     return(
@@ -51,7 +52,9 @@ class SearchBooks extends Component {
                 {searchResults.map((book) => (
                   <Book
                     book={ book }
+                    books={ books }
                     key={ book.id }
+                    shelfChanger={ shelfChanger }
                   />
                 ))}
                 </ol>

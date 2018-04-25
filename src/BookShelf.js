@@ -6,20 +6,19 @@ import PropTypes from 'prop-types';
 import Book from './Book';
 
 class BookShelf extends Component {
-  static PropTypes = {
-      books: PropTypes.array.isRequired
-  }
 
   render() {
-    const { books } = this.props
+    const { books, booksFromShelf, shelfChanger } = this.props
 
     return (
       <ol className="books-grid">
         {
-          books.map((book) => (
+          booksFromShelf.map((book) => (
             <Book
               book={ book }
               key={ book.id }
+              shelfChanger={ shelfChanger }
+              books={ books }
             />
           ))
         }

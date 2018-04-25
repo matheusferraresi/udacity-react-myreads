@@ -1,16 +1,30 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import * as BooksAPI from './BooksAPI'
 
 class Book extends Component {
   static PropTypes = {
     book: PropTypes.object.isRequired
   }
 
+  state = {
+    hasShelfChanged: false
+  }
+
   // TODO: filter when theres no author / no cover image
 
   render() {
-    const { book } = this.props
+    const { book, books, shelfChanger } = this.props
     const thumb = book.imageLinks.smallThumbnail
+    
+    let currentShelf = 'none';
+
+    for(let item of books) {
+      if (item.id === book.id) {
+        currentShelf = item.shelf
+        break;
+      } 
+    }
 
     return(
       <li>
@@ -21,7 +35,9 @@ class Book extends Component {
               style={{ backgroundImage: `url(${thumb})` }}>
             </div>
             <div className="book-shelf-changer">
-              <select>
+              <select 
+                defaultValue={currentShelf}
+                onChange={(e) => shelfChanger(e.target.value, book) }>
                 <option value="none" disabled>Move to...</option>
                 <option value="currentlyReading">Currently Reading</option>
                 <option value="wantToRead">Want to Read</option>

@@ -8,7 +8,7 @@ class BookShelves extends Component {
   }
 
   render() {
-    const { books } = this.props
+    const { books, shelfChanger } = this.props
     const shelves = [
       { type: 'currentlyReading', title: 'Currently Reading' },
       { type: 'wantToRead', title: 'Want to Read' },
@@ -26,7 +26,9 @@ class BookShelves extends Component {
               <h2 className="bookshelf-title">{ shelf.title }</h2>
               <div className="bookshelf-books">
                 <BookShelf
-                  books={ booksFromShelf }
+                  booksFromShelf={ booksFromShelf }
+                  shelfChanger={ shelfChanger }
+                  books={ books }
                 />
               </div>
             </div>

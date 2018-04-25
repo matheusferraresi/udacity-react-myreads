@@ -8,21 +8,32 @@ import BookShelves from './BookShelves'
 class BooksApp extends React.Component {
   state = {
     books: [],
+    hasShelfChanged: false
   }
 
   componentDidMount() {
-    BooksAPI.getAll()
-      .then((books) => {
-        this.setState({
-          books
-        })
-      })    
+    BooksAPI.getAll().then((books) => {
+      this.setState({books})
+    })    
+  }
+
+  shelfChanger = (newShelf, book) => {
+    BooksAPI.update(book, newShelf).then(_ => {
+      this.componentDidMount();
+    })
   }
 
   render() {
+    const { books } = this.state
+    
     return (
       <div className="app">
-        <Route path="/search" component={SearchBooks} />
+        <Route path="/search" render={() => (
+          <SearchBooks
+            shelfChanger={ this.shelfChanger }
+            books={ books }
+          />
+        )} />
 
         <Route exact path="/" render={() => (
           <div className="list-books">
@@ -30,7 +41,8 @@ class BooksApp extends React.Component {
               <h1>MyReads</h1>
             </div>
             <BookShelves
-              books={ this.state.books }
+              books={ books }
+              shelfChanger={ this.shelfChanger }
             />
             <div className="open-search">
               <Link to="/search">Add a book</Link>
